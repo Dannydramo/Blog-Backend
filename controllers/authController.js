@@ -107,7 +107,15 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     const resetToken = user.createPasswordResetToken();
     await user.save({ validateBeforeSave: false });
 
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    let frontendUrl;
+
+    if (process.env.NODE_ENV === "production") {
+        frontendUrl = "https://scribbles-snowy.vercel.app";
+    } else {
+        frontendUrl = "http://localhost:5173";
+    }
+
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     const message = `
     <p>Forgot your password? Submit a patch request with your new password to the following link:</p>
