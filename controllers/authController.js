@@ -37,7 +37,6 @@ const createSendToken = (user, statusCode, res, message) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-    console.log(req.body);
     const newUser = await User.create({
         username: req.body.userName,
         email: req.body.email,
@@ -120,7 +119,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
     const message = `
     <p>Forgot your password? Submit a patch request with your new password to the following link:</p>
-    <p><a target="_blank" href="${resetUrl}">${resetUrl}</a></p>
+    <p><a target="_blank" href="${resetUrl}">Reset Password</a></p>
     <p>If you didn't forget your password, please ignore this email.</p>
 `;
 
