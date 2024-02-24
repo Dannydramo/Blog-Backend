@@ -21,7 +21,15 @@ app.use(helmet());
 app.use(express.json());
 app.use(mongoSanitize());
 app.use(cookieParser());
-app.use("/public/img", express.static(__dirname + "/public/img"));
+app.use(
+    "/public/img",
+    (req, res, next) => {
+        res.setHeader("Content-Type", "image/jpeg");
+        next();
+    },
+    express.static(__dirname + "/public/img")
+);
+
 app.use((req, res, next) => {
     res.setHeader("Cache-Control", "public, max-age=31536000");
     next();
