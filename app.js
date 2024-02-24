@@ -12,7 +12,19 @@ const AppError = require("./utils/appError");
 const globalErorHandler = require("./controllers/errorController");
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ["https://scribbles-snowy.vercel.app"];
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+    })
+);
 app.use(helmet());
 app.use(express.json());
 app.use(mongoSanitize());
