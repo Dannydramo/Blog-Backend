@@ -18,6 +18,10 @@ const corsOptions = {
     exposedHeaders: "Authorization",
 };
 app.use(cors(corsOptions));
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    next();
+});
 app.use(helmet());
 app.use(express.json());
 app.use(mongoSanitize());
