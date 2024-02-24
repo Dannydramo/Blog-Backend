@@ -12,12 +12,7 @@ const AppError = require("./utils/appError");
 const globalErorHandler = require("./controllers/errorController");
 const app = express();
 
-const corsOptions = {
-    origin: ["http://localhost:5173", "https://scribbles-snowy.vercel.app"],
-    optionsSuccessStatus: 200,
-    exposedHeaders: "Authorization",
-};
-app.use(cors(corsOptions));
+app.use(cors());
 app.use((req, res, next) => {
     res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     next();
