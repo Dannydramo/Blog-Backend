@@ -12,12 +12,22 @@ const AppError = require("./utils/appError");
 const globalErorHandler = require("./controllers/errorController");
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+    origin: "https://scribbles-snowy.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json());
 app.use(mongoSanitize());
 app.use(cookieParser());
 app.use("/public/img", express.static(__dirname + "/public/img"));
+app.use((req, res, next) => {
+    res.setHeader("Cache-Control", "public, max-age=31536000");
+    next();
+});
 
 const limiter = rateLimit({
     max: 50,
