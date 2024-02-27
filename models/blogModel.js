@@ -17,6 +17,7 @@ const blogSchema = new mongoose.Schema({
         type: String,
         required: [true, "Blog summary is required"],
     },
+    slug: String,
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
