@@ -4,6 +4,7 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const httpProxy = require("http-proxy-middleware");
 const authRoute = require("./routes/authRoutes");
 const blogRoute = require("./routes/blogRoutes");
 const archiveRoute = require("./routes/archiveRoutes");
