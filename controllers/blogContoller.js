@@ -21,6 +21,7 @@ exports.resizeCoverImage = catchAsync(async (req, res, next) => {
         .toFormat("jpeg")
         .jpeg({ quality: 90 })
         .toFile(`public/img/${req.file.filename}`);
+    console.log("image uploaded to file");
 
     next();
 });
