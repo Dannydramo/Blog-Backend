@@ -13,9 +13,14 @@ const globalErorHandler = require("./controllers/errorController");
 const app = express();
 
 app.use(cors());
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+const imageProxy = httpProxy.createProxyMiddleware({
+    target: "https://scribbles-backend.onrender.com/public/img",
+    changeOrigin: true,
+});
+
+app.use("/public/img", imageProxy);
+app.use((req, res, next) => {
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
     next();
 });
 app.use(helmet());
@@ -26,6 +31,7 @@ app.use(
     "/public/img",
     (req, res, next) => {
         res.setHeader("Content-Type", "image/jpeg");
+        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
         next();
     },
     express.static(__dirname + "/public/img")
