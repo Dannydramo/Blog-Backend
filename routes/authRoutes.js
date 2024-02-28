@@ -20,8 +20,6 @@ router.get(
 router.patch(
     "/update-me",
     authController.protect,
-    userController.uploadPhoto,
-    userController.resizePhoto,
     userController.updateDetails
 );
 router.delete(

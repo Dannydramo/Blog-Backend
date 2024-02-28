@@ -1,28 +1,6 @@
 const User = require("./../models/userModel");
 const catchAsync = require("./../utils/catchAsync");
 const AppError = require("./../utils/appError");
-const multer = require("multer");
-const sharp = require("sharp");
-
-const storage = multer.memoryStorage();
-
-const upload = multer({ storage: storage });
-
-exports.uploadPhoto = upload.single("photo");
-
-exports.resizePhoto = catchAsync(async (req, res, next) => {
-    if (!req.file) return next();
-
-    req.file.filename = `img-${Math.random() * 2}-${Date.now()}.jpeg`;
-
-    sharp(req.file.buffer)
-        .resize(500, 500)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/${req.file.filename}`);
-
-    next();
-});
 
 const filterObj = (obj, ...allowedFields) => {
     const newObj = {};
@@ -58,7 +36,7 @@ exports.updateDetails = catchAsync(async (req, res, next) => {
     }
 
     const filteredBody = filterObj(req.body, "name", "email");
-    if (req.file) filteredBody.photo = req.file.filename;
+    filteredBody.photo = req.body.photo;
     filteredBody.description = req.body.description;
 
     const updatedUser = await User.findByIdAndUpdate(

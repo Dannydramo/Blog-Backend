@@ -2,29 +2,6 @@ const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
 const Blog = require("../models/blogModel");
 const AppError = require("./../utils/appError");
-const multer = require("multer");
-const sharp = require("sharp");
-
-const storage = multer.memoryStorage();
-
-const upload = multer({ storage: storage });
-
-exports.uploadCoverImage = upload.single("coverImage");
-
-exports.resizeCoverImage = catchAsync(async (req, res, next) => {
-    if (!req.file) return next();
-
-    req.file.filename = `img-${Math.random() * 2}-${Date.now()}.jpeg`;
-
-    sharp(req.file.buffer)
-        .resize(2000, 1333)
-        .toFormat("jpeg")
-        .jpeg({ quality: 90 })
-        .toFile(`public/img/${req.file.filename}`);
-    console.log("image uploaded to file");
-
-    next();
-});
 
 exports.getAllBlogs = catchAsync(async (req, res, next) => {
     const blogs = await Blog.find().populate("author");
@@ -88,9 +65,8 @@ exports.getBlogsByUser = catchAsync(async (req, res, next) => {
 });
 
 exports.postBlog = catchAsync(async (req, res, next) => {
-    const { title, content, summary, category } = req.body;
-    const coverImage = req.file.filename;
-    if (!title || !content || !summary || !category) {
+    const { title, content, summary, category, coverImage } = req.body;
+    if (!title || !content || !summary || !category || !coverImage) {
         return next(
             new AppError(
                 "Please provide all necssary information to create a blog",
@@ -104,6 +80,7 @@ exports.postBlog = catchAsync(async (req, res, next) => {
         summary,
         coverImage,
         category,
+        slug: title.toLowerCase().replace(/ /g, "-"),
         author: req.user.id,
     });
 
@@ -116,12 +93,7 @@ exports.postBlog = catchAsync(async (req, res, next) => {
 });
 exports.editBlog = catchAsync(async (req, res, next) => {
     const { id } = req.params;
-    const { title, content, summary, category } = req.body;
-    let coverImage;
-
-    if (req.file) {
-        coverImage = req.file.filename;
-    }
+    const { title, content, summary, category, coverImage } = req.body;
 
     const updatedBlog = await Blog.findByIdAndUpdate(
         id,

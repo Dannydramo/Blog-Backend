@@ -15,20 +15,8 @@ router.get(
     authController.protect,
     blogController.getBlogsByUser
 );
-router.post(
-    "/post",
-    authController.protect,
-    blogController.uploadCoverImage,
-    blogController.resizeCoverImage,
-    blogController.postBlog
-);
-router.patch(
-    "/edit/:id",
-    authController.protect,
-    blogController.uploadCoverImage,
-    blogController.resizeCoverImage,
-    blogController.editBlog
-);
+router.post("/post", authController.protect, blogController.postBlog);
+router.patch("/edit/:id", authController.protect, blogController.editBlog);
 router.post("/:id/reviews", authController.protect, reviewController.addReview);
 router.get(
     "/reviews/:id",

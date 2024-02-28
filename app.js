@@ -4,7 +4,6 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const httpProxy = require("http-proxy-middleware");
 const authRoute = require("./routes/authRoutes");
 const blogRoute = require("./routes/blogRoutes");
 const archiveRoute = require("./routes/archiveRoutes");
@@ -14,29 +13,10 @@ const globalErorHandler = require("./controllers/errorController");
 const app = express();
 
 app.use(cors());
-const imageProxy = httpProxy.createProxyMiddleware({
-    target: "https://scribbles-backend.onrender.com/public/img",
-    changeOrigin: true,
-});
-
-app.use("/public/img", imageProxy);
-app.use((req, res, next) => {
-    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-    next();
-});
 app.use(helmet());
 app.use(express.json());
 app.use(mongoSanitize());
 app.use(cookieParser());
-app.use(
-    "/public/img",
-    (req, res, next) => {
-        res.setHeader("Content-Type", "image/jpeg");
-        res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
-        next();
-    },
-    express.static(__dirname + "/public/img")
-);
 
 app.use((req, res, next) => {
     res.setHeader("Cache-Control", "public, max-age=31536000");
