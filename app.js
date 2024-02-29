@@ -11,22 +11,13 @@ const subscriptionRoute = require("./routes/subscriptionRoutes");
 const AppError = require("./utils/appError");
 const globalErorHandler = require("./controllers/errorController");
 const app = express();
-
-const corsOptions = {
-    origin: ["http://localhost:5173", "https://scribbles-snowy.vercel.app"],
-    optionsSuccessStatus: 200,
-    exposedHeaders: "Authorization",
-};
-app.use(cors(corsOptions));
+app.set("trust proxy", 1);
+app.use(cors());
 app.use(helmet());
+app.use(express.json({ limit: "10mb" }));
 app.use(express.json());
 app.use(mongoSanitize());
 app.use(cookieParser());
-
-app.use((req, res, next) => {
-    res.setHeader("Cache-Control", "public, max-age=31536000");
-    next();
-});
 
 const limiter = rateLimit({
     max: 50,
