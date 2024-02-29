@@ -13,7 +13,7 @@ const globalErorHandler = require("./controllers/errorController");
 const app = express();
 app.set("trust proxy", 1);
 const corsOptions = {
-    origin: ["https://scribbles-snowy.vercel.app"],
+    origin: ["https://scribbles-snowy.vercel.app", "http://localhost:5173"],
     optionsSuccessStatus: 200,
     exposedHeaders: "Authorization",
 };
