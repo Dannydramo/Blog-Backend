@@ -12,7 +12,12 @@ const AppError = require("./utils/appError");
 const globalErorHandler = require("./controllers/errorController");
 const app = express();
 app.set("trust proxy", 1);
-app.use(cors());
+const corsOptions = {
+    origin: ["https://scribbles-snowy.vercel.app"],
+    optionsSuccessStatus: 200,
+    exposedHeaders: "Authorization",
+};
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.json());
@@ -25,6 +30,11 @@ const limiter = rateLimit({
     message: "Too many request from this IP. Please try again later",
 });
 app.use("/api", limiter);
+if (process.env.NODE_ENV === "dev") {
+    app.use(morgan("dev"));
+} else {
+    app.use(morgan("combined"));
+}
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/blog", blogRoute);
