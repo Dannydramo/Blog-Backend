@@ -12,7 +12,12 @@ const AppError = require("./utils/appError");
 const globalErorHandler = require("./controllers/errorController");
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+    origin: ["http://localhost:5173", "https://scribbles-snowy.vercel.app"],
+    optionsSuccessStatus: 200,
+    exposedHeaders: "Authorization",
+};
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(express.json());
 app.use(mongoSanitize());
