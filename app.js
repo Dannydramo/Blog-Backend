@@ -25,28 +25,22 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = ["http://localhost:5173", process.env.FRONTEND_URL];
-app.use(
-    cors({
-        origin: function (origin, callback) {
-            if (allowedOrigins.includes(origin) || !origin) {
-                callback(null, true);
-            } else {
-                callback(new Error("Not allowed by CORS"));
-            }
-        },
-    })
-);
+const corsOptions = {
+    origin: ["http://localhost:5173", `${process.env.FRONTEND_URL}`],
+    optionsSuccessStatus: 200,
+    exposedHeaders: "Authorization",
+};
+app.use(cors(corsOptions));
 
 app.use(
     session({
-        secret: "your-secret-key", // Change this to a secret key for session encryption
+        secret: "your-secret-key",
         resave: false,
         saveUninitialized: false,
         cookie: {
-            secure: false, // Set to true if using HTTPS
+            secure: false,
             httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000, // Cookie expiration time (24 hours)
+            maxAge: 24 * 60 * 60 * 1000,
         },
     })
 );

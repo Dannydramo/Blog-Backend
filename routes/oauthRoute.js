@@ -20,7 +20,6 @@ router.get(
         const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRESIN,
         });
-        console.log(token);
         const cookiesOption = {
             expires: new Date(
                 Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
