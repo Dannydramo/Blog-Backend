@@ -25,7 +25,7 @@ router.get(
                 Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 60 * 60 * 1000
             ),
             // httpOnly: true,
-            domain: `${process.env.FRONTEND_URL}`,
+            domain: "scribbles-snowy.vercel.app",
         };
 
         // if (process.env.NODE_ENV === "production") cookiesOption.secure = true;
