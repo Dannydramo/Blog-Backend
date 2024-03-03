@@ -30,6 +30,10 @@ router.get(
         if (process.env.NODE_ENV === "production") cookiesOption.secure = true;
 
         res.cookie("token", token, cookiesOption);
+        res.status(200).json({
+            status: "success",
+            token,
+        });
         res.redirect(`${process.env.FRONTEND_URL}`);
     }
 );
