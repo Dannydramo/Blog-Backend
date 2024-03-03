@@ -32,9 +32,10 @@ router.get(
         res.cookie("token", token, cookiesOption);
         res.status(200).json({
             status: "success",
+            redirectUrl: `${process.env.FRONTEND_URL}`,
             token,
         });
-        res.redirect(`${process.env.FRONTEND_URL}`);
+        // res.redirect(`${process.env.FRONTEND_URL}`);
     }
 );
 module.exports = router;
