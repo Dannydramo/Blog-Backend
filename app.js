@@ -23,7 +23,7 @@ const app = express();
 app.set("trust proxy", 1);
 
 const corsOptions = {
-    origin: ["http://localhost:5173", `${process.env.FRONTEND_URL}`],
+    origin: ["http://localhost:5173", "https://scribbles-snowy.vercel.app/"],
     optionsSuccessStatus: 200,
     exposedHeaders: "Authorization",
 };
