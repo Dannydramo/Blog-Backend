@@ -7,8 +7,6 @@ const morgan = require("morgan");
 const mongoSanitize = require("express-mongo-sanitize");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const session = require("express-session");
-const passport = require("passport");
 
 // ERROR HANDLERS IMPORTS
 const AppError = require("./utils/appError");
@@ -17,7 +15,6 @@ const globalErorHandler = require("./controllers/errorController");
 // ROUTE IMPORTS
 const authRoute = require("./routes/authRoutes");
 const blogRoute = require("./routes/blogRoutes");
-const oauthRoute = require("./routes/oauthRoute");
 const archiveRoute = require("./routes/archiveRoutes");
 const subscriptionRoute = require("./routes/subscriptionRoutes");
 
@@ -32,26 +29,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(
-    session({
-        secret: "your-secret-key",
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            secure: false,
-            httpOnly: true,
-            maxAge: 24 * 60 * 60 * 1000,
-        },
-    })
-);
-
 app.use(helmet());
 app.use(express.json({ limit: "10mb" }));
 app.use(express.json());
 app.use(mongoSanitize());
 app.use(cookieParser());
-app.use(passport.initialize());
-app.use(passport.session());
 
 const limiter = rateLimit({
     max: 50,
@@ -71,7 +53,6 @@ app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/blog", blogRoute);
 app.use("/api/v1/archive", archiveRoute);
 app.use("/api/v1/subscription", subscriptionRoute);
-app.use("/api/v1/oauth", oauthRoute);
 
 app.all("*", (req, res, next) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));
