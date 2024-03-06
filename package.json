@@ -10,6 +10,7 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@octoai/client": "^0.5.1",
         "bcryptjs": "^2.4.3",
         "cloudinary": "^2.0.2",
         "cookie-parser": "^1.4.6",

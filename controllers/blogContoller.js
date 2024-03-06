@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 const User = require("../models/userModel");
 const Blog = require("../models/blogModel");
 const AppError = require("./../utils/appError");
+const { Client } = require("@octoai/client");
 
 exports.getAllBlogs = catchAsync(async (req, res, next) => {
     const blogs = await Blog.find().populate("author");
@@ -150,6 +151,40 @@ exports.getAuthorDetails = catchAsync(async (req, res, next) => {
         data: {
             author,
             blogs,
+        },
+    });
+});
+
+exports.generateBlogContent = catchAsync(async (req, res, next) => {
+    const OCTOAI_TOKEN = process.env.OCTOAI_TOKEN;
+    const client = new Client(`${OCTOAI_TOKEN}`);
+    const stream = await client.chat.completions.create({
+        messages: [
+            {
+                role: "system",
+                content:
+                    "You are a helpful assistant. Generate the blog content",
+            },
+            {
+                role: "user",
+                content: `Write a blog content on ${req.body.title}  with nothing less than 600 words`,
+            },
+        ],
+        model: "llama-2-13b-chat",
+        stream: true,
+    });
+    let text = "";
+    if (!stream) {
+        return next(new AppError("Unable to generate blog content", 400));
+    }
+    for await (const chunk of stream) {
+        text += chunk.choices[0].delta.content;
+    }
+    res.status(200).json({
+        status: "success",
+        message: "Blog content generated sucessfully",
+        data: {
+            text,
         },
     });
 });

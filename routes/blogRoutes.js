@@ -16,6 +16,7 @@ router.get(
     blogController.getBlogsByUser
 );
 router.post("/post", authController.protect, blogController.postBlog);
+router.post("/generate", blogController.generateBlogContent);
 router.patch("/edit/:id", authController.protect, blogController.editBlog);
 router.post("/:id/reviews", authController.protect, reviewController.addReview);
 router.get(
